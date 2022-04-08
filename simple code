@@ -1,0 +1,119 @@
+#include <iostream>
+using namespace std;
+
+struct node
+{
+	int data;
+	node *next = NULL;
+	node()
+	{
+		data = 0;
+	}
+	node(int da) :data(da) {};
+};
+
+struct list
+{
+	node *head = NULL;
+	node *tail = NULL;
+	void print_list();
+	void add_tail(int);
+	list add_list(list);
+};
+void list::print_list()
+{
+	node *p = head;
+	while (p != NULL)
+	{
+		cout << p->data;
+		p = p->next;
+	}
+}
+void list::add_tail(int x)
+{
+	node *p = new node(x);
+	if (head == NULL)
+	{
+		head = p;
+		tail = p;
+	}
+	else
+	{
+		tail->next = p;
+		tail = p;
+	}
+}
+list list::add_list(list obj)
+{
+	list p;
+	node *thisP = head;
+	node *objP = obj.head;
+	if (thisP->data < objP->data)
+	{
+		p.head = thisP;
+		p.tail = thisP;
+		thisP = thisP->next;
+		
+	}
+	else if (thisP->data > objP->data)
+	{
+		p.head = objP;
+		p.tail = objP;
+		objP = objP->next;
+	}
+	else
+	{
+		p.head = thisP;
+		p.tail = objP;
+		p.head->next = p.tail;
+	}
+	while ((thisP != NULL)&&(objP != NULL))
+	{
+		if (thisP->data < objP->data)
+		{
+			p.add_tail(thisP->data);
+			thisP = thisP->next;
+		}
+		else if (thisP->data > objP->data)
+		{
+			p.add_tail(objP->data);
+			objP = objP->next;
+		}
+		else
+		{
+			p.add_tail(thisP->data);
+			thisP = thisP->next;
+			p.add_tail(objP->data);
+			objP = objP->next;
+		}
+	}
+	while (thisP != NULL)
+	{
+		p.add_tail(thisP->data);
+		thisP = thisP->next;
+	}
+	while (objP != NULL)
+	{
+		p.add_tail(objP->data);
+		objP = objP->next;
+	}
+	return p;
+}
+
+
+
+int main()
+{
+	list obj1;
+	list obj2;
+	obj1.add_tail(4);
+	obj2.add_tail(5);
+	obj1.add_tail(6);
+	obj2.add_tail(7);
+	obj1.print_list();
+	cout << " ";
+	obj2.print_list();
+	cout << " ";
+	obj1.add_list(obj2).print_list(); 
+	system("pause");
+}
